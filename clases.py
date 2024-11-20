@@ -59,3 +59,15 @@ def completar_matriz(matriz):
             matriz[i][j] = adn[j]
     return matriz
 
+class Mutador:
+    def __init__(self, base_nitrogenada, tipo_mutacion, size_mutacion):
+        
+        self.base_nitrogenada = base_nitrogenada
+        self.tipo_mutacion = tipo_mutacion
+        self.size_mutacion = size_mutacion
+
+    def crear_mutante(self):
+        
+        pass
+
+
