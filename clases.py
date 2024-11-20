@@ -70,4 +70,26 @@ class Mutador:
         
         pass
 
+import random 
+class Sanador: 
+  def __init__(self, matriz_ADN, esMutante): 
+    self.matriz_ADN = matriz_ADN; 
+    self.esMutante = esMutante; 
+  # Genera una nueva matriz de ADN de 6 x 6, que se va a utilizar en caso de que el adn de la def sanar_mutantes detecte una matriz infectada 
+  def nueva_matriz(self): 
+    nueva_matrizADN = [] 
+    for i in range(6): # Nos da las columnas de la matriz 
+      aleatorio_ADN = "".join(random.choices("ATGC",k=6)) # Genera string aleatorio, recibe como param las letras que quiero que contenga, y la longitud del string a crear 
+      nueva_matrizADN.append(aleatorio_ADN) 
+      return nueva_matrizADN 
+  # Funcion que verifica el adn ,si esta infectado, genera un adn nuevo sin mutaciones, sino, devuelve el adn 
+  def sanar_mutantes(self): 
+    if self.esMutante: 
+      nuevaMatriz=self.nueva_matriz() 
+      # Verifica la matriz creada, si esta infectada genera otra hasta que genere una que no este infectada 
+      while Detector().detectar_mutante(nuevaMatriz): 
+        nuevaMatriz=self.nueva_matriz() 
+      return f"El ADN estaba infectado y fue sanado correctamente, el nuevo ADN desinfectado es {nuevaMatriz}" 
+    else: 
+      return f"El ADN no contenia mutaciones!, {self.matriz_ADN}"
 
