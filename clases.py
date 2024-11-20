@@ -60,7 +60,7 @@ def completar_matriz(matriz):
     return matriz
 
 class Mutador:
-    def __init__(self, base_nitrogenada, tipo_mutacion, size_mutacion):
+    def __init__(self, base_nitrogenada, tipo_mutacion, size_mutacion=4):
         
         self.base_nitrogenada = base_nitrogenada
         self.tipo_mutacion = tipo_mutacion
@@ -69,5 +69,11 @@ class Mutador:
     def crear_mutante(self):
         
         pass
-
-
+class Radiacion(Mutador):
+    def __init__ (self,base_nitrogenada,size_mutacion):
+        super().__init__(base_nitrogenada, "horizontal/vertical", size_mutacion)
+    def crear_mutante(self, matriz, posicion, orientacion):
+        fila, columna = posicion    
+        if orientacion !="H" or "V":
+            raise ValueError("La orientacion debe ser H o V")
+    
