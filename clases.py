@@ -13,7 +13,7 @@ class Detector():
             for i in range(columnas - 3):
                 if len(set(fila[i:i+4])) == 1:
                     self.base_mutada=fila[i]
-                    self.posicionInicio=f"fila: {i}, columna: {i}"
+                    self.posicionInicio=f"fila: {i+1}, columna: {i+1}"
                     self.direccion="horizontal"
                     return True
 
@@ -22,7 +22,7 @@ class Detector():
                 if len(set([lista[row + i][col] for i in range(4)])) == 1:
                     self.base_mutada=lista[row + i][col]
                     self.posicion_numero=col
-                    self.posicionInicio=f"fila: {row}, columna: {col}"
+                    self.posicionInicio=f"fila: {row+1}, columna: {col+1}"
                     self.direccion="vertical"
                     return True
 
@@ -30,7 +30,7 @@ class Detector():
             for col in range(columnas - 3):
                 if len(set([lista[row + i][col + i] for i in range(4)])) == 1:
                     self.base_mutada=fila[i]
-                    self.posicionInicio=f"fila: {row}, columna: {col}" 
+                    self.posicionInicio=f"fila: {row+1}, columna: {col+1}" 
                     self.direccion="diagonal principal"
                     return True
 
@@ -38,7 +38,7 @@ class Detector():
             for col in range(3, columnas): 
                 if len(set([lista[row + i][col - i] for i in range(4)])) == 1:
                     self.base_mutada=fila[i]
-                    self.posicionInicio=f"fila: {row}, columna: {col}" 
+                    self.posicionInicio=f"fila: {row+1}, columna: {col+1}" 
                     self.direccion="diagonal inversa"
                     return True
 
