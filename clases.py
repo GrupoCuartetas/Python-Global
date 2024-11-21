@@ -1,3 +1,4 @@
+import random
 class Detector():
     def __init__(self):
         self.direccion=None
@@ -70,10 +71,53 @@ class Mutador:
         
         pass
 class Radiacion(Mutador):
-    def __init__ (self,base_nitrogenada,size_mutacion):
+    def __init__(self, base_nitrogenada, size_mutacion):
         super().__init__(base_nitrogenada, "horizontal/vertical", size_mutacion)
+
     def crear_mutante(self, matriz, posicion, orientacion):
-        fila, columna = posicion    
-        if orientacion !="H" or "V":
+        fila, columna = posicion
+        if orientacion not in ["H", "V"]:
             raise ValueError("La orientacion debe ser H o V")
+
+        if orientacion == "H":
+            for i in range(columna, columna + self.size_mutacion):
+                matriz[fila][i] = self.base_nitrogenada
+
+            for i in range(6):
+                if i < columna or i >= columna + self.size_mutacion:
+                    matriz[fila][i] = random.choice("ACGT")
+
+        elif orientacion == "V":
+            for i in range(fila, fila + self.size_mutacion):
+                matriz[i][columna] = self.base_nitrogenada
+
+            for i in range(6):
+                if i < fila or i >= fila + self.size_mutacion:
+                    matriz[i][columna] = random.choice("ACGT")
+        return matriz
     
+class Virus(Mutador):
+    def __init__(self, base_nitrogenada, size_mutacion, tipo_diagonal):
+        super().__init__(base_nitrogenada, "diagonal", size_mutacion)
+        self.tipo_diagonal = tipo_diagonal
+
+    def crear_mutante(self, matriz, posicion_inicial):
+        try:
+            fila, columna = posicion_inicial
+            if self.tipo_diagonal == "principal":
+                for i in range(self.size_mutacion):
+                    matriz[fila + i][columna + i] = self.base_nitrogenada
+            elif self.tipo_diagonal == "inversa":
+                for i in range(self.size_mutacion):
+                    matriz[fila + i][columna - i] = self.base_nitrogenada
+            else:
+                raise ValueError("Tipo de diagonal no válido")
+            for i in range(6):
+                for j in range(6):
+                    if (i, j) not in [(fila + k, columna + k) for k in range(self.size_mutacion)] and (i, j) not in [(fila + k, columna - k) for k in range(self.size_mutacion)]:
+                        matriz[i][j] = random.choice("ACGT")
+
+            return matriz
+        except Exception as e:
+            print(f"Error: {e}")
+            return None
