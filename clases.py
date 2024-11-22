@@ -1,3 +1,4 @@
+import random
 class Detector():
     def __init__(self):
         self.direccion=None
@@ -47,30 +48,6 @@ class Detector():
     
     def informacion_detectada(self):
         print(f"la mutación es de base: {self.base_mutada} y está sobre {self.posicionInicio} con dirección {self.direccion}")    
-def completar_matriz(matriz):
-    for i in range(6):
-        adn = input(f"Ingrese una cadena de ADN de 6 letras para la fila {i+1}: ")
-        while len(adn) != 6 or not all(c in "ACGT" for c in adn.upper()):
-            print("Error: Debe ser una cadena de exactamente 6 letras (solo A, C, G, T).")
-            adn = input(f"Ingrese una cadena de ADN de 6 letras para la fila {i+1}: ")
-        
-        print("Cadena correcta.")
-        for j in range(6):
-            matriz[i][j] = adn[j]
-    return matriz
-
-class Mutador:
-    def __init__(self, base_nitrogenada, tipo_mutacion, size_mutacion):
-        
-        self.base_nitrogenada = base_nitrogenada
-        self.tipo_mutacion = tipo_mutacion
-        self.size_mutacion = size_mutacion
-
-    def crear_mutante(self):
-        
-        pass
-
-import random 
 class Sanador: 
   def __init__(self, matriz_ADN, esMutante): 
     self.matriz_ADN = matriz_ADN; 
@@ -92,4 +69,76 @@ class Sanador:
       return f"El ADN estaba infectado y fue sanado correctamente, el nuevo ADN desinfectado es {nuevaMatriz}" 
     else: 
       return f"El ADN no contenia mutaciones!, {self.matriz_ADN}"
+    
+def completar_matriz(matriz):
+    for i in range(6):
+        adn = input(f"Ingrese una cadena de ADN de 6 letras para la fila {i+1}: ")
+        while len(adn) != 6 or not all(c in "ACGT" for c in adn.upper()):
+            print("Error: Debe ser una cadena de exactamente 6 letras (solo A, C, G, T).")
+            adn = input(f"Ingrese una cadena de ADN de 6 letras para la fila {i+1}: ")
+        
+        print("Cadena correcta.")
+        for j in range(6):
+            matriz[i][j] = adn[j]
+    return matriz
 
+class Mutador:
+    def __init__(self, base_nitrogenada, tipo_mutacion, size_mutacion=4):
+        
+        self.base_nitrogenada = base_nitrogenada
+        self.tipo_mutacion = tipo_mutacion
+        self.size_mutacion = size_mutacion
+
+    def crear_mutante(self):
+        
+        pass
+class Radiacion(Mutador):
+    def __init__(self, base_nitrogenada, size_mutacion):
+        super().__init__(base_nitrogenada, "horizontal/vertical", size_mutacion)
+
+    def crear_mutante(self, matriz, posicion, orientacion):
+        fila, columna = posicion
+        if orientacion not in ["H", "V"]:
+            raise ValueError("La orientacion debe ser H o V")
+        if orientacion == "H":
+            for i in range(columna, columna + self.size_mutacion):
+                matriz[fila][i] = self.base_nitrogenada
+
+            for i in range(6):
+                if i < columna or i >= columna + self.size_mutacion:
+                    matriz[fila][i] = random.choice("ACGT")
+
+        elif orientacion == "V":
+            for i in range(fila, fila + self.size_mutacion):
+                matriz[i][columna] = self.base_nitrogenada
+
+            for i in range(6):
+                if i < fila or i >= fila + self.size_mutacion:
+                    matriz[i][columna] = random.choice("ACGT")
+        return matriz
+    
+class Virus(Mutador):
+    def __init__(self, base_nitrogenada, size_mutacion, tipo_diagonal):
+        super().__init__(base_nitrogenada, "diagonal", size_mutacion)
+        self.tipo_diagonal = tipo_diagonal
+
+    def crear_mutante(self, matriz, posicion_inicial):
+        try:
+            fila, columna = posicion_inicial
+            if self.tipo_diagonal == "principal":
+                for i in range(self.size_mutacion):
+                    matriz[fila + i][columna + i] = self.base_nitrogenada
+            elif self.tipo_diagonal == "inversa":
+                for i in range(self.size_mutacion):
+                    matriz[fila + i][columna - i] = self.base_nitrogenada
+            else:
+                raise ValueError("Tipo de diagonal no válido")
+            for i in range(6):
+                for j in range(6):
+                    if (i, j) not in [(fila + k, columna + k) for k in range(self.size_mutacion)] and (i, j) not in [(fila + k, columna - k) for k in range(self.size_mutacion)]:
+                        matriz[i][j] = random.choice("ACGT")
+
+            return matriz
+        except Exception as e:
+            print(f"Error: {e}")
+            return None

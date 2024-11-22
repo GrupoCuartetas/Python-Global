@@ -36,7 +36,32 @@ while respuesta != 4:
         else:
             print("La matriz no está infectada.")
     elif respuesta == 2:
-        print("Función mutar ADN no implementada aún.")
+        print("¿Qué tipo de mutación desea realizar?")
+        print("1. Radiación")
+        print("2. Virus")
+        tipo_mutacion = int(input())
+        if tipo_mutacion == 1:
+            print("Ingrese la base nitrogenada que desea mutar (A, C, G o T):")
+            base_nitrogenada = input().upper()
+            print("Ingrese la posición inicial de la mutacion (fila y columna):")
+            fila = int(input()) - 1
+            columna = int(input()) - 1
+            print("Ingrese la orientación de la mutación (H o V):")
+            orientacion = input().upper()
+            radiacion = clases.Radiacion(base_nitrogenada, 4)
+            matriz = radiacion.crear_mutante(matriz, (fila, columna), orientacion)
+        elif tipo_mutacion == 2:
+            print("Ingrese la base nitrogenada que desea mutar (A, C, G o T):")
+            base_nitrogenada = input().upper()
+            print("Ingrese la posición inicial de la mutación (fila y columna):")
+            fila = int(input()) - 1
+            columna = int(input()) - 1
+            print("Ingrese el tipo de diagonal que desea mutar (principal o inversa):")
+            tipo_diagonal = input().lower()
+            virus = clases.Virus(base_nitrogenada, 4, tipo_diagonal)
+            matriz = virus.crear_mutante(matriz, (fila, columna))
+        else:
+            print("Opción inválida. Intente de nuevo.")
     elif respuesta == 3:
         print("Función sanar ADN no implementada aún.")
     elif respuesta == 4:
