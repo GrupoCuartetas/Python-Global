@@ -48,6 +48,28 @@ class Detector():
     
     def informacion_detectada(self):
         print(f"la mutación es de base: {self.base_mutada} y está sobre {self.posicionInicio} con dirección {self.direccion}")    
+class Sanador: 
+  def __init__(self, matriz_ADN, esMutante): 
+    self.matriz_ADN = matriz_ADN; 
+    self.esMutante = esMutante; 
+  # Genera una nueva matriz de ADN de 6 x 6, que se va a utilizar en caso de que el adn de la def sanar_mutantes detecte una matriz infectada 
+  def nueva_matriz(self): 
+    nueva_matrizADN = [] 
+    for i in range(6): # Nos da las columnas de la matriz 
+      aleatorio_ADN = "".join(random.choices("ATGC",k=6)) # Genera string aleatorio, recibe como param las letras que quiero que contenga, y la longitud del string a crear 
+      nueva_matrizADN.append(aleatorio_ADN) 
+      return nueva_matrizADN 
+  # Funcion que verifica el adn ,si esta infectado, genera un adn nuevo sin mutaciones, sino, devuelve el adn 
+  def sanar_mutantes(self): 
+    if self.esMutante: 
+      nuevaMatriz=self.nueva_matriz() 
+      # Verifica la matriz creada, si esta infectada genera otra hasta que genere una que no este infectada 
+      while Detector().detectar_mutante(nuevaMatriz): 
+        nuevaMatriz=self.nueva_matriz() 
+      return f"El ADN estaba infectado y fue sanado correctamente, el nuevo ADN desinfectado es {nuevaMatriz}" 
+    else: 
+      return f"El ADN no contenia mutaciones!, {self.matriz_ADN}"
+    
 def completar_matriz(matriz):
     for i in range(6):
         adn = input(f"Ingrese una cadena de ADN de 6 letras para la fila {i+1}: ")
@@ -78,7 +100,6 @@ class Radiacion(Mutador):
         fila, columna = posicion
         if orientacion not in ["H", "V"]:
             raise ValueError("La orientacion debe ser H o V")
-
         if orientacion == "H":
             for i in range(columna, columna + self.size_mutacion):
                 matriz[fila][i] = self.base_nitrogenada
